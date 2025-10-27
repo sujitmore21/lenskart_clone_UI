@@ -10,6 +10,7 @@ class ProductCard extends StatelessWidget {
   final VoidCallback? onTap;
   final VoidCallback? onAddToCart;
   final VoidCallback? onFavorite;
+  final bool isFavorite;
 
   const ProductCard({
     super.key,
@@ -17,6 +18,7 @@ class ProductCard extends StatelessWidget {
     this.onTap,
     this.onAddToCart,
     this.onFavorite,
+    this.isFavorite = false,
   });
 
   @override
@@ -85,8 +87,10 @@ class ProductCard extends StatelessWidget {
                   top: 8,
                   right: 8,
                   child: IconButton(
-                    icon: const Icon(Icons.favorite_border),
-                    color: AppColors.textPrimary,
+                    icon: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                    ),
+                    color: isFavorite ? AppColors.error : AppColors.textPrimary,
                     onPressed: onFavorite,
                     style: IconButton.styleFrom(
                       backgroundColor: Colors.white.withOpacity(0.8),

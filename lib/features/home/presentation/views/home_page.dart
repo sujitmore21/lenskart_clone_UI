@@ -6,6 +6,7 @@ import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/constants/app_images.dart';
 import '../../../products/presentation/viewmodels/product_viewmodel.dart';
 import '../../../cart/presentation/viewmodels/cart_viewmodel.dart';
+import '../../../favorites/presentation/viewmodels/favorites_viewmodel.dart';
 import '../../../../shared/widgets/product_card.dart';
 
 /// Home Page - Main landing page
@@ -320,8 +321,14 @@ class _HomePageState extends ConsumerState<HomePage> {
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
                       final product = productState.products[index];
+                      final favoritesState = ref.watch(
+                        favoritesViewModelProvider,
+                      );
+                      final isFavorite = favoritesState.isFavorite(product.id);
+
                       return ProductCard(
                         product: product,
+                        isFavorite: isFavorite,
                         onTap: () {
                           context.push('/product/${product.id}');
                         },
@@ -336,6 +343,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                             ),
                           );
                         },
+                        onFavorite: () {
+                          ref
+                              .read(favoritesViewModelProvider.notifier)
+                              .toggleFavorite(product);
+                        },
                       );
                     },
                     childCount: productState.products.length > 4
@@ -346,24 +358,6 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.category),
-            label: 'Categories',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            label: 'Favorites',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Profile',
-          ),
-        ],
       ),
     );
   }
